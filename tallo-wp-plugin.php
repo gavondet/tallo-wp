@@ -1,3 +1,5 @@
+<?php
+
 /**
 * Plugin Name:       Talleres Online
 * Plugin URI:        https://talleresonline.net/plugins/
@@ -12,3 +14,19 @@
 * Text Domain:       tallo-wp-plugin
 * Domain Path:       /languages
 */
+
+
+function tallo_add_custom_roles() {
+       add_role( 'custom_role', 'Custom Subscriber', array( 'read' => true, 'level_0' => true, 'edit_posts' => true ) );
+}
+
+
+function tallo_remove_custom_roles() {
+       remove_role( 'custom_role', 'Custom Subscriber', array( 'read' => true, 'level_0' => true, 'edit_posts' => true ) );
+}
+
+
+
+
+register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
+register_deactivation_hook( __FILE__, 'tallo_remove_custom_roles' );
