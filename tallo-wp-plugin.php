@@ -15,6 +15,8 @@
 * Domain Path:       /languages
 */
 
+// This enables debugging.
+define( 'WP_DEBUG', true );
 define( 'TALLERES_ONLINE_VERSION', '1.1.1' );
 
 register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
@@ -24,14 +26,35 @@ add_action('plugins_loaded', 'tallo_check_version');
 
 
 function tallo_add_custom_roles() {
-    add_role( 'custom_role', 'Custom Subscriber', array( 'read' => true, 'level_0' => true, 'edit_posts' => true) );
-//     add_role( 'custom_role2', 'Custom Subscriber2', array( 'read' => true, 'level_0' => true) );
+
+    $roles = [
+        'custom_subscriber' => array(
+            'display_name' => 'Custom Subscriber',
+            'capabilities' => array(
+                'read' => true,
+                'level_0' => true,
+                'edit_posts' => true
+            )
+        ),
+        'custom_subscriber_2' => array(
+            'display_name' => 'Custom Subscriber 2',
+            'capabilities' => array(
+                'read' => true,
+                'level_0' => true
+            )
+        )
+    ];
+
+    foreach ($roles as $role => $values) {
+        add_role( $role, $values['display_name'], $values['capabilities'] );
+    };
+
 }
 
 
 function tallo_remove_custom_roles() {
-    remove_role( 'custom_role', 'Custom Subscriber', array( 'read' => true, 'level_0' => true, 'edit_posts' => true ) );
-//     remove_role( 'custom_role2', 'Custom Subscriber2', array( 'read' => true, 'level_0' => true) );
+    remove_role( 'custom_subscriber', 'Custom Subscriber', array( 'read' => true, 'level_0' => true, 'edit_posts' => true ) );
+    remove_role( 'custom_subscriber_2', 'Custom Subscriber 2', array( 'read' => true, 'level_0' => true) );
 }
 
 
@@ -44,5 +67,3 @@ function tallo_check_version() {
 
     update_option('talleres_online_version', TALLERES_ONLINE_VERSION);
 }
-
-
