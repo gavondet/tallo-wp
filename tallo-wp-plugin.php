@@ -15,6 +15,28 @@
 * Domain Path:       /languages
 */
 
+
+global $tallo_roles;
+
+$tallo_roles= [
+    'custom_subscriber' => array(
+        'display_name' => 'Custom Subscriber',
+        'capabilities' => array(
+            'read' => true,
+            'level_0' => true,
+            'edit_posts' => true
+        )
+    ),
+    'custom_subscriber_2' => array(
+        'display_name' => 'Custom Subscriber 2',
+        'capabilities' => array(
+            'read' => true,
+            'level_0' => true
+        )
+    )
+];
+
+
 // This enables debugging.
 define( 'WP_DEBUG', true );
 define( 'TALLERES_ONLINE_VERSION', '1.1.1' );
@@ -27,25 +49,9 @@ add_action('plugins_loaded', 'tallo_check_version');
 
 function tallo_add_custom_roles() {
 
-    $roles = [
-        'custom_subscriber' => array(
-            'display_name' => 'Custom Subscriber',
-            'capabilities' => array(
-                'read' => true,
-                'level_0' => true,
-                'edit_posts' => true
-            )
-        ),
-        'custom_subscriber_2' => array(
-            'display_name' => 'Custom Subscriber 2',
-            'capabilities' => array(
-                'read' => true,
-                'level_0' => true
-            )
-        )
-    ];
+    global $tallo_roles;
 
-    foreach ($roles as $role => $values) {
+    foreach ($tallo_roles as $role => $values) {
         add_role( $role, $values['display_name'], $values['capabilities'] );
     };
 
@@ -53,8 +59,13 @@ function tallo_add_custom_roles() {
 
 
 function tallo_remove_custom_roles() {
-    remove_role( 'custom_subscriber', 'Custom Subscriber', array( 'read' => true, 'level_0' => true, 'edit_posts' => true ) );
-    remove_role( 'custom_subscriber_2', 'Custom Subscriber 2', array( 'read' => true, 'level_0' => true) );
+
+    global $tallo_roles;
+
+    foreach ($tallo_roles as $role => $values) {
+        remove_role( $role, $values['display_name'], $values['capabilities'] );
+    };
+
 }
 
 
