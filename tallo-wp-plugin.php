@@ -4,7 +4,7 @@
 * Plugin Name:       Talleres Online
 * Plugin URI:        https://talleresonline.net/plugins/
 * Description:       El mejor plugin para Talleres Online
-* Version:           1.1.1
+* Version:           1.0.0
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            El Despliegue
@@ -19,19 +19,10 @@
 global $tallo_roles;
 
 $tallo_roles= [
-    'custom_subscriber' => array(
-        'display_name' => 'Custom Subscriber',
+    'beta_tester' => array(
+        'display_name' => 'Beta Tester',
         'capabilities' => array(
-            'read' => true,
-            'level_0' => true,
-            'edit_posts' => true
-        )
-    ),
-    'custom_subscriber_2' => array(
-        'display_name' => 'Custom Subscriber 2',
-        'capabilities' => array(
-            'read' => true,
-            'level_0' => true
+            'read' => true
         )
     )
 ];
@@ -39,7 +30,7 @@ $tallo_roles= [
 
 // This enables debugging.
 define( 'WP_DEBUG', true );
-define( 'TALLERES_ONLINE_VERSION', '1.1.1' );
+define( 'TALLERES_ONLINE_VERSION', '1.0.0' );
 
 register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
 register_deactivation_hook( __FILE__, 'tallo_remove_custom_roles' );
