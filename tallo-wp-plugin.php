@@ -36,7 +36,7 @@ register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
 register_deactivation_hook( __FILE__, 'tallo_remove_custom_roles' );
 
 add_action('plugins_loaded', 'tallo_check_version');
-
+add_action('init', 'tallo_register_proyectos_post_type');
 
 function tallo_add_custom_roles() {
 
@@ -69,3 +69,19 @@ function tallo_check_version() {
 
     update_option('talleres_online_version', TALLERES_ONLINE_VERSION);
 }
+
+function tallo_register_proyectos_post_type() {
+    register_post_type('tallo_proyectos',
+        array(
+            'labels'      => array(
+                'name'          => __( 'Proyectos', 'textdomain' ),
+                'singular_name' => __( 'Proyecto', 'textdomain' ),
+            ),
+            'public'      => true,
+            'has_archive' => true,
+            'rewrite'     => array( 'slug' => 'proyectos' ),
+	    'menu_icon'   => 'dashicons-art',
+	)	    
+    );
+}
+
