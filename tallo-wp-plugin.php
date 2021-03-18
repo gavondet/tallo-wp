@@ -22,7 +22,10 @@ $tallo_roles= [
     'beta_tester' => array(
         'display_name' => 'Beta Tester',
         'capabilities' => array(
-            'read' => true
+            'read' => true,
+            'edit_tallo_proyectos' => true,
+            'delete_tallo_proyectos' => true,
+            'upload_files' => true,
         )
     )
 ];
@@ -37,6 +40,7 @@ register_deactivation_hook( __FILE__, 'tallo_remove_custom_roles' );
 
 add_action('plugins_loaded', 'tallo_check_version');
 add_action('init', 'tallo_register_proyectos_post_type');
+
 
 function tallo_add_custom_roles() {
 
@@ -71,7 +75,7 @@ function tallo_check_version() {
 }
 
 function tallo_register_proyectos_post_type() {
-    register_post_type('tallo_proyectos',
+    register_post_type('tallo_proyecto',
         array(
             'labels'      => array(
                 'name'          => __( 'Proyectos', 'textdomain' ),
@@ -80,8 +84,9 @@ function tallo_register_proyectos_post_type() {
             'public'      => true,
             'has_archive' => true,
             'rewrite'     => array( 'slug' => 'proyectos' ),
-	    'menu_icon'   => 'dashicons-art',
-	)	    
+            'menu_icon'   => 'dashicons-art',
+            'capability_type' => array( 'tallo_proyecto', 'tallo_proyectos'),
+            'map_meta_cap' => true,
+	    )
     );
 }
-
