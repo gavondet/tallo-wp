@@ -87,6 +87,11 @@ function tallo_register_proyectos_post_type() {
             'menu_icon'   => 'dashicons-art',
             'capability_type' => array( 'tallo_proyecto', 'tallo_proyectos'),
             'map_meta_cap' => true,
+            'supports' => array(
+                'title' => 'title',
+                'editor' => 'editor',
+                'thumbnail' => 'thumbnail',
+            ),
 	    )
     );
 }
