@@ -37,6 +37,7 @@ define( 'TALLERES_ONLINE_VERSION', '1.0.0' );
 
 register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
 register_deactivation_hook( __FILE__, 'tallo_remove_custom_roles' );
+register_deactivation_hook( __FILE__, 'tallo_unregister_proyectos_post_type' );
 
 add_action('plugins_loaded', 'tallo_check_version');
 add_action('init', 'tallo_register_proyectos_post_type');
@@ -86,12 +87,12 @@ function tallo_register_proyectos_post_type() {
             'rewrite'     => array( 'slug' => 'proyectos' ),
             'menu_icon'   => 'dashicons-art',
             'capability_type' => array( 'tallo_proyecto', 'tallo_proyectos'),
-            'map_meta_cap' => true,
-            'supports' => array(
-                'title' => 'title',
-                'editor' => 'editor',
-                'thumbnail' => 'thumbnail',
-            ),
+            'map_meta_cap' => true
 	    )
     );
 }
+
+function tallo_unregister_proyectos_post_type() {
+    unregister_post_type('tallo_proyecto');
+}
+
