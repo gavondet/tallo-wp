@@ -32,6 +32,22 @@ $tallo_roles= [
     )
 ];
 
+global $tallo_custom_post_types;
+
+$tallo_custom_post_types= [
+    'tallo_proyecto' => array(
+        'name'          => 'Proyectos',
+        'singular_name' => 'Proyecto',
+        'slug'          => 'proyectos',
+        'menu_icon'     => 'dashicons-art',
+    ),
+    'tallo_tipo_proyecto' => array(
+        'name'          => 'Tipo de Proyectos',
+        'singular_name' => 'Tipo de Proyecto',
+        'slug'          => 'tipo_proyectos',
+        'menu_icon'     => 'dashicons-tag',
+    )
+];
 
 // This enables debugging.
 define( 'WP_DEBUG', true );
@@ -39,12 +55,11 @@ define( 'TALLERES_ONLINE_VERSION', '1.0.0' );
 
 register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
 register_deactivation_hook( __FILE__, 'tallo_remove_custom_roles' );
-register_deactivation_hook( __FILE__, 'tallo_unregister_proyectos_post_type' );
-register_deactivation_hook( __FILE__, 'tallo_unregister_tipo_proyectos_post_type' );
+register_deactivation_hook( __FILE__, 'tallo_unregister_custom_post_types' );
 
 add_action('plugins_loaded', 'tallo_check_version');
-add_action('init', 'tallo_register_proyectos_post_type');
-add_action('init', 'tallo_register_tipo_proyecto_post_type');
+add_action('init', 'tallo_register_custom_post_types');
+
 
 
 function tallo_add_custom_roles() {
@@ -79,42 +94,33 @@ function tallo_check_version() {
     update_option('talleres_online_version', TALLERES_ONLINE_VERSION);
 }
 
-function tallo_register_proyectos_post_type() {
-    register_post_type('tallo_proyecto',
-        array(
-            'labels'      => array(
-                'name'          => __( 'Proyectos', 'textdomain' ),
-                'singular_name' => __( 'Proyecto', 'textdomain' ),
-            ),
-            'public'      => true,
-            'has_archive' => true,
-            'rewrite'     => array( 'slug' => 'proyectos' ),
-            'menu_icon'   => 'dashicons-art',
-            'map_meta_cap' => true
-        )
-    );
+
+function tallo_register_custom_post_types() {
+    global $tallo_custom_post_types;
+
+    foreach ($tallo_custom_post_types as $custom_post_type => $attributes) {
+        register_post_type($custom_post_type,
+            array(
+                'labels'      => array(
+                    'name'          => __( $attributes['name'], 'textdomain' ),
+                    'singular_name' => __( $attributes['singular_name'], 'textdomain' ),
+                ),
+                'public'      => true,
+                'has_archive' => true,
+                'rewrite'     => array( 'slug' => $attributes['slug'] ),
+                'menu_icon'   => $attributes['menu_icon'],
+                'map_meta_cap' => true
+            )
+        );
+    };
 }
 
-function tallo_register_tipo_proyecto_post_type() {
-    register_post_type('tallo_tipo_proyecto',
-        array(
-            'labels'      => array(
-                'name'          => __( 'Tipo de Proyectos', 'textdomain' ),
-                'singular_name' => __( 'Tipo de Proyecto', 'textdomain' ),
-            ),
-            'public'      => true,
-            'has_archive' => true,
-            'rewrite'     => array( 'slug' => 'tipo_proyectos' ),
-            'menu_icon'   => 'dashicons-tag',
-            'map_meta_cap' => true
-        )
-    );
-}
 
-function tallo_unregister_proyectos_post_type() {
-    unregister_post_type('tallo_proyecto');
-}
+function tallo_unregister_custom_post_types() {
+    global $tallo_custom_post_types;
 
-function tallo_unregister_tipo_proyectos_post_type() {
-    unregister_post_type('tallo_tipo_proyecto');
+    foreach ($tallo_custom_post_types as $custom_post_type) {
+        unregister_post_type($custom_post_type);
+    };
+
 }
