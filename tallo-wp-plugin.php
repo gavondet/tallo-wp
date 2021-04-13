@@ -18,7 +18,7 @@
 
 global $tallo_roles;
 
-$tallo_roles= [
+$tallo_roles = array(
     'beta_tester' => array(
         'display_name' => 'Beta Tester',
         'capabilities' => array(
@@ -30,11 +30,11 @@ $tallo_roles= [
             'upload_files' => true,
         )
     )
-];
+);
 
 global $tallo_custom_post_types;
 
-$tallo_custom_post_types= [
+$tallo_custom_post_types = array(
     'tallo_proyecto' => array(
         'name'          => 'Proyectos',
         'singular_name' => 'Proyecto',
@@ -53,7 +53,7 @@ $tallo_custom_post_types= [
 	'slug'          => 'anuncios',
 	'menu_icon'     => 'dashicons-megaphone',
     ),
-];
+);
 
 define( 'TALLERES_ONLINE_VERSION', '1.0.2' );
 
