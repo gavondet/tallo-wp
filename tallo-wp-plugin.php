@@ -46,7 +46,13 @@ $tallo_custom_post_types= [
         'singular_name' => 'Tipo de Proyecto',
         'slug'          => 'tipo_proyectos',
         'menu_icon'     => 'dashicons-tag',
-    )
+    ),
+    'tallo_anuncio' => array(
+	'name'          => 'Anuncios',
+	'singular_name' => 'Anuncio',
+	'slug'          => 'anuncios',
+	'menu_icon'     => 'dashicons-megaphone',
+    ),
 ];
 
 define( 'TALLERES_ONLINE_VERSION', '1.0.2' );
