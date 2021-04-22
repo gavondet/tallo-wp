@@ -48,10 +48,16 @@ $tallo_custom_post_types = array(
         'menu_icon'     => 'dashicons-tag',
     ),
     'tallo_anuncio' => array(
-	'name'          => 'Anuncios',
-	'singular_name' => 'Anuncio',
-	'slug'          => 'anuncios',
-	'menu_icon'     => 'dashicons-megaphone',
+        'name'          => 'Anuncios',
+        'singular_name' => 'Anuncio',
+        'slug'          => 'anuncios',
+        'menu_icon'     => 'dashicons-megaphone',
+    ),
+    'tallo_plantilla' => array(
+        'name'          => 'Plantillas de Anuncios',
+        'singular_name' => 'Plantilla de Anuncio',
+        'slug'          => 'anuncios_plantilla',
+        'menu_icon'     => 'dashicons-media-document',
     ),
 );
 
