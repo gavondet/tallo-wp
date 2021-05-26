@@ -69,6 +69,8 @@ register_deactivation_hook( __FILE__, 'tallo_unregister_custom_post_types' );
 
 add_action('plugins_loaded', 'tallo_check_version');
 add_action('init', 'tallo_register_custom_post_types');
+add_action('init', 'tallo_add_custom_posts_supports');
+
 
 
 
@@ -119,10 +121,24 @@ function tallo_register_custom_post_types() {
                 'has_archive' => true,
                 'rewrite'     => array( 'slug' => $attributes['slug'] ),
                 'menu_icon'   => $attributes['menu_icon'],
-                'map_meta_cap' => true
+                'map_meta_cap' => true,
             )
         );
     };
+}
+
+
+function tallo_add_custom_posts_supports() {
+    $custom_posts = array(
+        'tallo_proyecto',
+        'tallo_anuncio'
+    );
+    $features = array('author');
+
+    foreach ( $custom_posts as $custom_post ) {
+        add_post_type_support( $custom_post, $features );
+    }
+
 }
 
 
