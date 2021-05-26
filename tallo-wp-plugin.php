@@ -133,7 +133,7 @@ function tallo_add_custom_posts_supports() {
         'tallo_proyecto',
         'tallo_anuncio'
     );
-    $features = array('author');
+    $features = array('author', 'page-attributes');
 
     foreach ( $custom_posts as $custom_post ) {
         add_post_type_support( $custom_post, $features );
