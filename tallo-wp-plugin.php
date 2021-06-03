@@ -23,12 +23,15 @@ $tallo_roles = array(
         'display_name' => 'Beta Tester',
         'capabilities' => array(
             'read' => true,
-            'read_proyectos' => true,
+            'upload_files' => true,
             'edit_proyectos' => true,
             'edit_published_proyectos' => true,
             'publish_proyectos' => true,
             'delete_proyectos' => true,
-            'upload_files' => true,
+            'edit_anuncios' => true,
+            'edit_published_anuncios' => true,
+            'publish_anuncios' => true,
+            'delete_anuncios' => true,
         )
     )
 );
