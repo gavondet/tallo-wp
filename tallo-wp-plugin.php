@@ -23,10 +23,11 @@ $tallo_roles = array(
         'display_name' => 'Beta Tester',
         'capabilities' => array(
             'read' => true,
-            'edit_tallo_proyectos' => true,
-            'delete_tallo_proyectos' => true,
-            'edit_tallo_tipo_proyectos' => true,
-            'delete_tallo_tipo_proyectos' => true,
+            'read_proyectos' => true,
+            'edit_proyectos' => true,
+            'edit_published_proyectos' => true,
+            'publish_proyectos' => true,
+            'delete_proyectos' => true,
             'upload_files' => true,
         )
     )
@@ -40,24 +41,29 @@ $tallo_custom_post_types = array(
         'singular_name' => 'Proyecto',
         'slug'          => 'proyectos',
         'menu_icon'     => 'dashicons-art',
+        'capability_type' => 'proyecto',
     ),
     'tallo_tipo_proyecto' => array(
         'name'          => 'Tipo de Proyectos',
         'singular_name' => 'Tipo de Proyecto',
         'slug'          => 'tipo_proyectos',
         'menu_icon'     => 'dashicons-tag',
+        'capability_type' => 'tipo_proyecto',
+
     ),
     'tallo_anuncio' => array(
         'name'          => 'Anuncios',
         'singular_name' => 'Anuncio',
         'slug'          => 'anuncios',
         'menu_icon'     => 'dashicons-megaphone',
+        'capability_type' => 'anuncio',
     ),
     'tallo_plantilla' => array(
         'name'          => 'Plantillas de Anuncios',
         'singular_name' => 'Plantilla de Anuncio',
         'slug'          => 'anuncios_plantilla',
         'menu_icon'     => 'dashicons-media-document',
+        'capability_type' => 'plantilla',
     ),
 );
 
@@ -121,6 +127,7 @@ function tallo_register_custom_post_types() {
                 'has_archive' => true,
                 'rewrite'     => array( 'slug' => $attributes['slug'] ),
                 'menu_icon'   => $attributes['menu_icon'],
+                'capability_type' => $attributes['capability_type'],
                 'map_meta_cap' => true,
             )
         );
