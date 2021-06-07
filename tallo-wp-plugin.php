@@ -79,6 +79,7 @@ register_deactivation_hook( __FILE__, 'tallo_unregister_custom_post_types' );
 add_action('plugins_loaded', 'tallo_check_version');
 add_action('init', 'tallo_register_custom_post_types');
 add_action('init', 'tallo_add_custom_posts_supports');
+add_action('init', 'tallo_add_admin_capabilities');
 
 
 
@@ -140,8 +141,8 @@ function tallo_register_custom_post_types() {
 
 function tallo_add_custom_posts_supports() {
     $custom_posts = array(
-        'tallo_proyecto',
-        'tallo_anuncio'
+        'tallo_tipo_proyecto',
+        'tallo_plantilla'
     );
     $features = array('author', 'page-attributes');
 
@@ -158,5 +159,31 @@ function tallo_unregister_custom_post_types() {
     foreach ($tallo_custom_post_types as $custom_post_type) {
         unregister_post_type($custom_post_type);
     };
+
+}
+
+function tallo_add_admin_capabilities() {
+    $role = get_role( 'administrator' );
+
+    $custom_post_types = array(
+        'proyectos',
+        'tipo_proyectos',
+        'anuncios',
+        'plantillas',
+    );
+
+    $capabilities = array(
+        'edit_',
+        'delete_',
+        'publish_',
+        'edit_published_',
+        'delete_published_',
+    );
+
+    foreach ($custom_post_types as $custom_post_type) {
+        foreach ($capabilities as $cap) {
+            $role->add_cap( "{$cap}{$custom_post_type}" );
+        }
+    }
 
 }
