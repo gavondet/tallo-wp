@@ -16,13 +16,13 @@
 */
 
 
-global $tallo_roles;
-
 $tallo_roles = array(
     'beta_tester' => array(
         'display_name' => 'Beta Tester',
         'capabilities' => array(
             'read' => true,
+            'edit_posts' => true,
+            'delete_posts' => true,
             'upload_files' => true,
             'edit_proyectos' => true,
             'edit_published_proyectos' => true,
@@ -35,8 +35,6 @@ $tallo_roles = array(
         )
     )
 );
-
-global $tallo_custom_post_types;
 
 $tallo_custom_post_types = array(
     'tallo_proyecto' => array(
@@ -70,6 +68,13 @@ $tallo_custom_post_types = array(
     ),
 );
 
+// Estos custom post types son los editables por los talleristas
+$tallo_editable_custom_post_types = array(
+    'tallo_proyecto',
+    'tallo_anuncio'
+);
+
+
 define( 'TALLERES_ONLINE_VERSION', '1.0.2' );
 
 register_activation_hook( __FILE__, 'tallo_add_custom_roles' );
@@ -80,6 +85,10 @@ add_action('plugins_loaded', 'tallo_check_version');
 add_action('init', 'tallo_register_custom_post_types');
 add_action('init', 'tallo_add_custom_posts_supports');
 add_action('init', 'tallo_add_admin_capabilities');
+
+add_action('restrict_manage_posts', 'tallo_restrict_manage_authors');
+
+add_filter('wp_dropdown_users_args', 'tallo_add_custom_roles_to_dropdown', 10, 2 );
 
 
 
@@ -140,13 +149,10 @@ function tallo_register_custom_post_types() {
 
 
 function tallo_add_custom_posts_supports() {
-    $custom_posts = array(
-        'tallo_tipo_proyecto',
-        'tallo_plantilla'
-    );
-    $features = array('author', 'page-attributes');
+    global $tallo_editable_custom_post_types;
 
-    foreach ( $custom_posts as $custom_post ) {
+    $features = array('author', 'page-attributes');
+    foreach ( $tallo_editable_custom_post_types as $custom_post ) {
         add_post_type_support( $custom_post, $features );
     }
 
@@ -186,4 +192,49 @@ function tallo_add_admin_capabilities() {
         }
     }
 
+}
+
+
+/*
+ *   https://developer.wordpress.org/reference/hooks/wp_dropdown_users_args/
+ */
+function tallo_add_custom_roles_to_dropdown( $query_args, $r ) {
+  
+    global $post;
+    global $tallo_roles, $tallo_editable_custom_post_types;
+
+    if (in_array($post->post_type, $tallo_editable_custom_post_types)) {
+
+        $query_args['role__in'] = array_merge(
+            ['administrator', 'editor'],
+            array_keys($tallo_roles)
+        );
+
+        unset( $query_args['who'] );
+
+    }
+ 
+    return $query_args;
+}
+
+
+/*
+ *    https://www.isitwp.com/wordpress-add-show-posts-by-author-filter-menu-to-admin-posts-list/
+ */
+function tallo_restrict_manage_authors() {
+
+    global $tallo_editable_custom_post_types;
+
+    if (
+        isset($_GET['post_type']) 
+        && in_array(strtolower($_GET['post_type']), $tallo_editable_custom_post_types)
+    ) {
+        wp_dropdown_users(array(
+            'show_option_all'   => __('All Authors'),
+            'show_option_none'  => false,
+            'name'          => 'author',
+            'selected'      => !empty($_GET['author']) ? $_GET['author'] : 0,
+            'include_selected'  => false
+        ));
+    }
 }
