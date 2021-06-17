@@ -17,6 +17,8 @@
 
 
 $tallo_roles = array(
+    // TODO en todo caso estos tienen que tener el prefijo tallo
+    // o los agregamos en la otra funcion y aca los que no sean automaticos
     'beta_tester' => array(
         'display_name' => 'Beta Tester',
         'capabilities' => array(
@@ -32,11 +34,16 @@ $tallo_roles = array(
             'edit_published_anuncios' => true,
             'publish_anuncios' => true,
             'delete_anuncios' => true,
+            'edit_tallo_link_pago' => true,
+            'edit_tallo_published_link_pago' => true,
+            'publish_tallo_link_pago' => true,
+            'delete_tallo_link_pago' => true,
         )
     )
 );
 
 $tallo_custom_post_types = array(
+    // TODO agregarles los prefijo tallo_ a los custom types
     'tallo_proyecto' => array(
         'name'          => 'Proyectos',
         'singular_name' => 'Proyecto',
@@ -66,12 +73,21 @@ $tallo_custom_post_types = array(
         'menu_icon'     => 'dashicons-media-document',
         'capability_type' => 'plantilla',
     ),
+    'tallo_link_pago' => array(
+        'name'          => 'Links de Pago',
+        'singular_name' => 'Link de Pago',
+        'slug'          => 'link_pagos',
+        'menu_icon'     => 'dashicons-tickets',
+        'capability_type' => 'tallo_link_pago',
+    ),
 );
 
 // Estos custom post types son los editables por los talleristas
+// TODO que pasa si queremos poner otro plural? en ese caso usar un array en vez de string para ese caso y validarlo en la funcion que lo usa?
 $tallo_editable_custom_post_types = array(
     'tallo_proyecto',
-    'tallo_anuncio'
+    'tallo_anuncio',
+    'tallo_link_pago'
 );
 
 
@@ -144,7 +160,7 @@ function tallo_register_custom_post_types() {
                 'map_meta_cap' => true,
             )
         );
-    };
+    }
 }
 
 
@@ -169,14 +185,9 @@ function tallo_unregister_custom_post_types() {
 }
 
 function tallo_add_admin_capabilities() {
-    $role = get_role( 'administrator' );
+    global $tallo_custom_post_types;
 
-    $custom_post_types = array(
-        'proyectos',
-        'tipo_proyectos',
-        'anuncios',
-        'plantillas',
-    );
+    $role = get_role( 'administrator' );
 
     $capabilities = array(
         'edit_',
@@ -186,9 +197,10 @@ function tallo_add_admin_capabilities() {
         'delete_published_',
     );
 
-    foreach ($custom_post_types as $custom_post_type) {
+    foreach ($tallo_custom_post_types as $custom_post_type => $attributes) {
         foreach ($capabilities as $cap) {
             $role->add_cap( "{$cap}{$custom_post_type}" );
+            $role->add_cap( "{$cap}{$custom_post_type}s" );
         }
     }
 
@@ -203,7 +215,8 @@ function tallo_add_custom_roles_to_dropdown( $query_args, $r ) {
     global $post;
     global $tallo_roles, $tallo_editable_custom_post_types;
 
-    if (in_array($post->post_type, $tallo_editable_custom_post_types)) {
+    $post_type = !is_null($post) ? $post->post_type : $_GET['post_type'];
+    if (in_array($post_type, $tallo_editable_custom_post_types)) {
 
         $query_args['role__in'] = array_merge(
             ['administrator', 'editor'],
@@ -213,7 +226,6 @@ function tallo_add_custom_roles_to_dropdown( $query_args, $r ) {
         unset( $query_args['who'] );
 
     }
- 
     return $query_args;
 }
 
@@ -238,3 +250,117 @@ function tallo_restrict_manage_authors() {
         ));
     }
 }
+
+
+// TODO mover a un archivo aparte, sumarle lo que tenemos actualmente y deprecar el json
+// tal vez meter esta funcion en la activacion del plugin
+// lo "malo" es que estos tipos no aparecen en la pantalla del acf
+if( function_exists('acf_add_local_field_group') ):
+
+acf_add_local_field_group(array(
+    'key' => 'group_60cb589c1a9f0',
+    'title' => 'Link de Pago',
+    'fields' => array(
+        array(
+            'key' => 'field_60cb5b42c220a',
+            'label' => 'Slug',
+            'name' => 'slug',
+            'type' => 'text',
+            'instructions' => '',
+            'required' => 1,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'prepend' => '',
+            'append' => '',
+            'maxlength' => '',
+        ),
+        array(
+            'key' => 'field_60cb5b60c220b',
+            'label' => 'Metodo',
+            'name' => 'metodo',
+            'type' => 'select',
+            'instructions' => '',
+            'required' => 1,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'choices' => array(
+                'transferencia' => 'Transferencia',
+                'mercadopago' => 'Mercado Pago',
+                'paypal' => 'PayPal',
+                'westernunion' => 'Western Union',
+                'otro' => 'Otro',
+            ),
+            'default_value' => false,
+            'allow_null' => 0,
+            'multiple' => 0,
+            'ui' => 0,
+            'return_format' => 'value',
+            'ajax' => 0,
+            'placeholder' => '',
+        ),
+        array(
+            'key' => 'field_60cb5be0c220c',
+            'label' => 'Url',
+            'name' => 'url',
+            'type' => 'url',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+        ),
+        array(
+            'key' => 'field_60cb5c20c220e',
+            'label' => 'Activo',
+            'name' => 'activo',
+            'type' => 'true_false',
+            'instructions' => '',
+            'required' => 1,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'message' => '',
+            'default_value' => 1,
+            'ui' => 0,
+            'ui_on_text' => '',
+            'ui_off_text' => '',
+        ),
+    ),
+    'location' => array(
+        array(
+            array(
+                'param' => 'post_type',
+                'operator' => '==',
+                'value' => 'tallo_link_pago',
+            ),
+        ),
+    ),
+    'menu_order' => 0,
+    'position' => 'normal',
+    'style' => 'default',
+    'label_placement' => 'top',
+    'instruction_placement' => 'label',
+    'hide_on_screen' => '',
+    'active' => true,
+    'description' => '',
+));
+
+endif;
