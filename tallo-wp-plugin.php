@@ -298,6 +298,8 @@ acf_add_local_field_group(array(
                 'mercadopago' => 'Mercado Pago',
                 'paypal' => 'PayPal',
                 'westernunion' => 'Western Union',
+                'personalmente' => 'Personalmente',
+                'contacto' => 'Contacto',
                 'otro' => 'Otro',
             ),
             'default_value' => false,
