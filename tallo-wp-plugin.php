@@ -15,7 +15,7 @@
 * Domain Path:       /languages
 */
 
-
+global $tallo_roles;
 $tallo_roles = array(
     // TODO en todo caso estos tienen que tener el prefijo tallo
     // o los agregamos en la otra funcion y aca los que no sean automaticos
@@ -42,6 +42,7 @@ $tallo_roles = array(
     )
 );
 
+global $tallo_custom_post_types;
 $tallo_custom_post_types = array(
     // TODO agregarles los prefijo tallo_ a los custom types
     'tallo_proyecto' => array(
@@ -84,6 +85,7 @@ $tallo_custom_post_types = array(
 
 // Estos custom post types son los editables por los talleristas
 // TODO que pasa si queremos poner otro plural? en ese caso usar un array en vez de string para ese caso y validarlo en la funcion que lo usa?
+global $tallo_editable_custom_post_types;
 $tallo_editable_custom_post_types = array(
     'tallo_proyecto',
     'tallo_anuncio',
