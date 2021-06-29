@@ -376,7 +376,7 @@ endif;
 function tallo_flush_rules() {
     $rules = get_option( 'rewrite_rules' );
 
-    if ( ! isset( $rules['(front_anuncio_view)/([^/]+)/([^/]+)?$'] ) ) {
+    if ( ! isset( $rules['anuncio/([^/]+)/([^/]+)?$'] ) ) {
         global $wp_rewrite;
         $wp_rewrite->flush_rules();
     }
@@ -393,7 +393,7 @@ add_action( 'wp_loaded','tallo_flush_rules' );
 
 function tallo_insert_rewrite_rules( $rules ) {
     $newrules = array();
-    $newrules['(front_anuncio_view)/([^/]+)/([^/]+)?$'] = 'index.php?pagename=$matches[1]&username=$matches[2]&slug_anuncio=$matches[3]';
+    $newrules['anuncio/([^/]+)/([^/]+)?$'] = 'index.php?pagename=front_anuncio_view&username=$matches[1]&slug_anuncio=$matches[2]';
 
     return $newrules + $rules;
 }
