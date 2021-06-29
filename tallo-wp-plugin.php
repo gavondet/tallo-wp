@@ -368,3 +368,41 @@ acf_add_local_field_group(array(
 ));
 
 endif;
+
+
+/**
+ * Flushes rewrites if our project rule isn't yet added.
+ */
+function tallo_flush_rules() {
+    $rules = get_option( 'rewrite_rules' );
+
+    if ( ! isset( $rules['(front_anuncio_view)/([^/]+)/([^/]+)?$'] ) ) {
+        global $wp_rewrite;
+        $wp_rewrite->flush_rules();
+    }
+}
+add_action( 'wp_loaded','tallo_flush_rules' );
+
+// Adding a new rule
+/**
+ * Adds a new rewrite rule.
+ *
+ * @param array $rules Existing rewrite rules.
+ * @return array (Maybe) modified list of rewrites.
+ */
+
+function tallo_insert_rewrite_rules( $rules ) {
+    $newrules = array();
+    $newrules['(front_anuncio_view)/([^/]+)/([^/]+)?$'] = 'index.php?pagename=$matches[1]&username=$matches[2]&slug_anuncio=$matches[3]';
+
+    return $newrules + $rules;
+}
+add_filter( 'rewrite_rules_array','tallo_insert_rewrite_rules' );
+
+// Adding the username var so that WP recognizes it
+function tallo_insert_query_vars( $vars ) {
+    array_push( $vars, 'username' );
+    array_push( $vars, 'slug_anuncio' );
+    return $vars;
+}
+add_filter( 'query_vars','tallo_insert_query_vars' );
