@@ -254,136 +254,39 @@ function tallo_restrict_manage_authors() {
 }
 
 
-// TODO mover a un archivo aparte, sumarle lo que tenemos actualmente y deprecar el json
-// tal vez meter esta funcion en la activacion del plugin
-// lo "malo" es que estos tipos no aparecen en la pantalla del acf
-if( function_exists('acf_add_local_field_group') ):
+/**
+ * Flushes rewrites if our project rule isn't yet added.
+ */
+function tallo_flush_rules() {
+    $rules = get_option( 'rewrite_rules' );
 
-acf_add_local_field_group(array(
-    'key' => 'group_60cb589c1a9f0',
-    'title' => 'Link de Pago',
-    'fields' => array(
-        array(
-            'key' => 'field_60cb5b42c220a',
-            'label' => 'Slug',
-            'name' => 'slug',
-            'type' => 'text',
-            'instructions' => '',
-            'required' => 1,
-            'conditional_logic' => 0,
-            'wrapper' => array(
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
-            'default_value' => '',
-            'placeholder' => '',
-            'prepend' => '',
-            'append' => '',
-            'maxlength' => '',
-        ),
-        array(
-            'key' => 'field_60cb5b60c220b',
-            'label' => 'Metodo',
-            'name' => 'metodo',
-            'type' => 'select',
-            'instructions' => '',
-            'required' => 1,
-            'conditional_logic' => 0,
-            'wrapper' => array(
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
-            'choices' => array(
-                'transferencia' => 'Transferencia',
-                'mercadopago' => 'Mercado Pago',
-                'personalmente' => 'Personalmente',
-                'contacto' => 'Contacto',
-                'otro' => 'Otro',
-                'paypal' => 'PayPal',
-                'westernunion' => 'Western Union',
-            ),
-            'default_value' => false,
-            'allow_null' => 0,
-            'multiple' => 0,
-            'ui' => 0,
-            'return_format' => 'value',
-            'ajax' => 0,
-            'placeholder' => '',
-        ),
-        array(
-            'key' => 'field_60cb5be0c220c',
-            'label' => 'Url',
-            'name' => 'url',
-            'type' => 'url',
-            'instructions' => '',
-            'required' => 0,
-            'conditional_logic' => 0,
-            'wrapper' => array(
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
-            'default_value' => '',
-            'placeholder' => '',
-        ),
-		array(
-			'key' => 'field_60d4d261b430b',
-			'label' => 'Monto',
-			'name' => 'monto',
-			'type' => 'text',
-			'instructions' => '',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array(
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-			'prepend' => '',
-			'append' => '',
-			'maxlength' => '',
-		),
-        array(
-            'key' => 'field_60cb5c20c220e',
-            'label' => 'Activo',
-            'name' => 'activo',
-            'type' => 'true_false',
-            'instructions' => '',
-            'required' => 0,
-            'conditional_logic' => 0,
-            'wrapper' => array(
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
-            'message' => '',
-            'default_value' => 1,
-            'ui' => 0,
-            'ui_on_text' => '',
-            'ui_off_text' => '',
-        ),
-    ),
-    'location' => array(
-        array(
-            array(
-                'param' => 'post_type',
-                'operator' => '==',
-                'value' => 'tallo_link_pago',
-            ),
-        ),
-    ),
-    'menu_order' => 0,
-    'position' => 'normal',
-    'style' => 'default',
-    'label_placement' => 'top',
-    'instruction_placement' => 'label',
-    'hide_on_screen' => '',
-    'active' => true,
-    'description' => '',
-));
+    if ( ! isset( $rules['anuncio/([^/]+)/([^/]+)?$'] ) ) {
+        global $wp_rewrite;
+        $wp_rewrite->flush_rules();
+    }
+}
+add_action( 'wp_loaded','tallo_flush_rules' );
 
-endif;
+// Adding a new rule
+/**
+ * Adds a new rewrite rule.
+ *
+ * @param array $rules Existing rewrite rules.
+ * @return array (Maybe) modified list of rewrites.
+ */
+
+function tallo_insert_rewrite_rules( $rules ) {
+    $newrules = array();
+    $newrules['anuncio/([^/]+)/([^/]+)?$'] = 'index.php?pagename=front_anuncio_view&username=$matches[1]&slug_anuncio=$matches[2]';
+
+    return $newrules + $rules;
+}
+add_filter( 'rewrite_rules_array','tallo_insert_rewrite_rules' );
+
+// Adding the username var so that WP recognizes it
+function tallo_insert_query_vars( $vars ) {
+    array_push( $vars, 'username' );
+    array_push( $vars, 'slug_anuncio' );
+    return $vars;
+}
+add_filter( 'query_vars','tallo_insert_query_vars' );
