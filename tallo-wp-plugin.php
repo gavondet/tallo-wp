@@ -26,14 +26,14 @@ $tallo_roles = array(
             'edit_posts' => true,
             'delete_posts' => true,
             'upload_files' => true,
-            'edit_proyectos' => true,
-            'edit_published_proyectos' => true,
-            'publish_proyectos' => true,
-            'delete_proyectos' => true,
-            'edit_anuncios' => true,
-            'edit_published_anuncios' => true,
-            'publish_anuncios' => true,
-            'delete_anuncios' => true,
+            'edit_tallo_proyectos' => true,
+            'edit_published_tallo_proyectos' => true,
+            'publish_tallo_proyectos' => true,
+            'delete_tallo_proyectos' => true,
+            'edit_tallo_anuncios' => true,
+            'edit_published_tallo_anuncios' => true,
+            'publish_tallo_anuncios' => true,
+            'delete_tallo_anuncios' => true,
             'edit_tallo_link_pago' => true,
             'edit_tallo_published_link_pago' => true,
             'publish_tallo_link_pago' => true,
@@ -50,14 +50,12 @@ $tallo_custom_post_types = array(
         'singular_name' => 'Proyecto',
         'slug'          => 'proyectos',
         'menu_icon'     => 'dashicons-art',
-        'capability_type' => 'proyecto',
     ),
     'tallo_tipo_proyecto' => array(
         'name'          => 'Tipo de Proyectos',
         'singular_name' => 'Tipo de Proyecto',
         'slug'          => 'tipo_proyectos',
         'menu_icon'     => 'dashicons-tag',
-        'capability_type' => 'tipo_proyecto',
 
     ),
     'tallo_anuncio' => array(
@@ -65,21 +63,18 @@ $tallo_custom_post_types = array(
         'singular_name' => 'Anuncio',
         'slug'          => 'anuncios',
         'menu_icon'     => 'dashicons-megaphone',
-        'capability_type' => 'anuncio',
     ),
     'tallo_plantilla' => array(
         'name'          => 'Plantillas de Anuncios',
         'singular_name' => 'Plantilla de Anuncio',
         'slug'          => 'anuncios_plantilla',
         'menu_icon'     => 'dashicons-media-document',
-        'capability_type' => 'plantilla',
     ),
     'tallo_link_pago' => array(
         'name'          => 'Links de Pago',
         'singular_name' => 'Link de Pago',
         'slug'          => 'link_pagos',
         'menu_icon'     => 'dashicons-tickets',
-        'capability_type' => 'tallo_link_pago',
     ),
 );
 
@@ -158,7 +153,7 @@ function tallo_register_custom_post_types() {
                 'has_archive' => true,
                 'rewrite'     => array( 'slug' => $attributes['slug'] ),
                 'menu_icon'   => $attributes['menu_icon'],
-                'capability_type' => $attributes['capability_type'],
+                'capability_type' => $custom_post_type,
                 'map_meta_cap' => true,
             )
         );
