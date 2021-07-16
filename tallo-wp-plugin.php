@@ -44,7 +44,6 @@ $tallo_roles = array(
 
 global $tallo_custom_post_types;
 $tallo_custom_post_types = array(
-    // TODO agregarles los prefijo tallo_ a los custom types
     'tallo_proyecto' => array(
         'name'          => 'Proyectos',
         'singular_name' => 'Proyecto',
@@ -192,6 +191,8 @@ function tallo_add_admin_capabilities() {
         'publish_',
         'edit_published_',
         'delete_published_',
+        'edit_others_',
+        'delete_others',
     );
 
     foreach ($tallo_custom_post_types as $custom_post_type => $attributes) {
